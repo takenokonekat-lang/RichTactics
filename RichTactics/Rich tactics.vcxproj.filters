@@ -1,0 +1,234 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source">
+      <UniqueIdentifier>{0b5ac9f6-ed8e-4925-a8e9-a27e3b64dd70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\BackGround">
+      <UniqueIdentifier>{5fc40adb-153f-4482-8f08-9983b8891180}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Collision">
+      <UniqueIdentifier>{0b99ea3d-4996-4e37-947e-35d14015827f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Enemy">
+      <UniqueIdentifier>{b046e3a1-c738-47bc-b710-a89477f40b6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\FPS">
+      <UniqueIdentifier>{982d1497-cdd7-4319-a0da-546ebfc037e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\GameSetting">
+      <UniqueIdentifier>{02de88ba-9661-4b4f-950e-0605ff78e1ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Input">
+      <UniqueIdentifier>{205c0305-07b0-4aeb-b7f5-4bd463e6620f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Map">
+      <UniqueIdentifier>{02593e8e-f8b6-454d-8922-d2aae4a70eba}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Player">
+      <UniqueIdentifier>{79095462-a231-418b-86d3-aeb2a183a25a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene">
+      <UniqueIdentifier>{02f8acf4-954e-44ed-9589-283c2a1bd18c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Sound">
+      <UniqueIdentifier>{9f083416-acc2-465d-b7a7-9ce52c400207}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\UIImage">
+      <UniqueIdentifier>{6d3569cb-4328-4b64-a2de-72a6ea2f0ce3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene\Play">
+      <UniqueIdentifier>{85ed6b4d-6ee7-4c17-8a09-086679128bfc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene\GameClear">
+      <UniqueIdentifier>{b2e7f7db-6a5a-40bd-8258-0150f3d55a9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene\GameOver">
+      <UniqueIdentifier>{0187a3bd-4ee7-4c52-a05e-6205fc62a1b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Scene\Title">
+      <UniqueIdentifier>{ba23d92f-7dd5-4c0e-9482-1200b5c3a25d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Weapon">
+      <UniqueIdentifier>{1403d02a-6c0e-4383-9c56-4c10ea070bea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Weapon\Gun">
+      <UniqueIdentifier>{4f8990fc-556c-4156-ada2-959c7fcea13f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Weapon\Sword">
+      <UniqueIdentifier>{a7f4a77b-d23f-411c-b3fa-e9d58b379f0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Camera">
+      <UniqueIdentifier>{7c31216f-788e-4794-933e-c084ed164e35}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Animation">
+      <UniqueIdentifier>{5fa8595e-bedf-48fe-a85d-9624315e23e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source\Effect">
+      <UniqueIdentifier>{323415fe-f2c2-4711-a62a-8864c22deffe}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Main.cpp">
+      <Filter>Source</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\BackGround\BackGround.cpp">
+      <Filter>Source\BackGround</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Collision\Collision.cpp">
+      <Filter>Source\Collision</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\FPS\FPS.cpp">
+      <Filter>Source\FPS</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Input\Input.cpp">
+      <Filter>Source\Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Player\Player.cpp">
+      <Filter>Source\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\SceneManager.cpp">
+      <Filter>Source\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Title\Title.cpp">
+      <Filter>Source\Scene\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Play\Play.cpp">
+      <Filter>Source\Scene\Play</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\GameOver\GameOverScene.cpp">
+      <Filter>Source\Scene\GameOver</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\GameClear\GameClearScene.cpp">
+      <Filter>Source\Scene\GameClear</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Sound\SoundManager.cpp">
+      <Filter>Source\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\UIImage.cpp">
+      <Filter>Source\UIImage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UI\UIText.cpp">
+      <Filter>Source\UIImage</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Weapon\WeaponManager.cpp">
+      <Filter>Source\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Weapon\Gun.cpp">
+      <Filter>Source\Weapon\Gun</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Weapon\Sword.cpp">
+      <Filter>Source\Weapon\Sword</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Weapon\BulletManager.cpp">
+      <Filter>Source\Weapon\Gun</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Map\Block.cpp">
+      <Filter>Source\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Map\MapChip.cpp">
+      <Filter>Source\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Map\MapManager.cpp">
+      <Filter>Source\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Camera\Camera.cpp">
+      <Filter>Source\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Animation\Animation.cpp">
+      <Filter>Source\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Effect\AnimationEffect.cpp">
+      <Filter>Source\Effect</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\BackGround\BackGround.h">
+      <Filter>Source\BackGround</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Collision\Collision.h">
+      <Filter>Source\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Collision\CollisionParameter.h">
+      <Filter>Source\Collision</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\FPS\FPS.h">
+      <Filter>Source\FPS</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\GameSetting\GameSetting.h">
+      <Filter>Source\GameSetting</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Input\Input.h">
+      <Filter>Source\Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Player\Player.h">
+      <Filter>Source\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\SceneManager.h">
+      <Filter>Source\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\Title\TitleScene.h">
+      <Filter>Source\Scene\Title</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\Play\PlayScene.h">
+      <Filter>Source\Scene\Play</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\GameOver\GameOverScene.h">
+      <Filter>Source\Scene\GameOver</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\GameClear\GameClearScene.h">
+      <Filter>Source\Scene\GameClear</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Sound\SoundManager.h">
+      <Filter>Source\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\UIImage.h">
+      <Filter>Source\UIImage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UI\UIText.h">
+      <Filter>Source\UIImage</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Weapon\WeaponManeger.h">
+      <Filter>Source\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Weapon\WeaponParameter.h">
+      <Filter>Source\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Weapon\Gun.h">
+      <Filter>Source\Weapon\Gun</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Weapon\Sword.h">
+      <Filter>Source\Weapon\Sword</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Weapon\BulletManager.h">
+      <Filter>Source\Weapon\Gun</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Weapon\BulletParameter.h">
+      <Filter>Source\Weapon\Gun</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Map\Block.h">
+      <Filter>Source\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Map\MapChip.h">
+      <Filter>Source\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Map\MapManager.h">
+      <Filter>Source\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Map\MapParameter.h">
+      <Filter>Source\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Camera\Camera.h">
+      <Filter>Source\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Animation\Animation.h">
+      <Filter>Source\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Effect\AnimationEffect.h">
+      <Filter>Source\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Effect\AnimationEffectParameter.h">
+      <Filter>Source\Effect</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

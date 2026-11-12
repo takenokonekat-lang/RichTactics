@@ -97,6 +97,8 @@ void UpdatePlayScene()
 	UpdateUIImage();
 	UpdateUIText();
 	
+	UpdateGun();
+
 	// “–‚½‚è”»’è
 	CheckCollision();
 }

@@ -33,8 +33,8 @@ struct PlayerData
 	int respawnTimer;			// リスポーン待機タイマー
 	int invisibleTimer;			// 無敵時間タイマー
 	int life;					// 残機数
-	int width;
-	int height;
+	float width;
+	float height;
 	float angle;
 
 	Body body;
@@ -57,12 +57,12 @@ void UpdatePlayer();
 void DrawPlayer();
 void FinPlayer();
 
+void FireBullet();
+
 // 取得関数
 PlayerData GetPlayer();
 
 // リスポーン処理(リスポーンできなかったらfalseを返す)
 bool RespawnPlayer();
 
-// 当たり判定
-void PlayerHitNormalBlockX(MapChipData mapChipData);
-void PlayerHitNormalBlockY(MapChipData mapChipData);
+

@@ -11,6 +11,7 @@
 #include "../Camera/Camera.h"
 #include "../Common/Common.h"
 #include "../Math/MyMath.h"
+#include "../Sound/SoundManager.h"
 #include <math.h>
 #include "../Weapon/Gun.h"
 
@@ -84,7 +85,6 @@ void InitPlayer()
 	g_PlayerData.active = false;
 	g_PlayerData.playAnim = PLAYER_ANIM_NONE;
 	g_PlayerData.bulletIntervalTimer;
-	g_PlayerData.GunType = OLD_GUN;
 
 	for (int i = 0; i < PLAYER_ANIM_MAX; i++)
 	{
@@ -214,70 +214,30 @@ void StepPlayer()
 	// Z入力
 	if (IsInputKey(KEY_Z))
 	{
-		// 弾発射位置はちょっと前から
-		float fireX = g_PlayerData.body.pos.x + PLAYER_NORMAL_SHOT_OFFSET_X;
-		float fireY = g_PlayerData.body.pos.y + PLAYER_NORMAL_SHOT_OFFSET_Y;
-
-		// 現在向いている向きを計算
-		VECTOR PlayerVec = { 0 };
-		g_PlayerData.dir.x = cosf(AngleToRadian(g_PlayerData.angle));
-		g_PlayerData.dir.y = sinf(AngleToRadian(g_PlayerData.angle));
-
-		// 向きのベクトルは常に正規化しておく
-		g_PlayerData.dir = VecNormalize(g_PlayerData.dir);
-		
-		// インターバル時間がすぎてから撃つ
-		if (g_PlayerData.bulletIntervalTimer <= 0)
-		{
-			VECTOR* pos = new VECTOR;
-			VECTOR* move = new VECTOR;
-			pos->x = g_PlayerData.body.pos.x + g_PlayerData.dir.x * PLAYER_BOX_COLLISION_OFFSET_X;
-			pos->y = g_PlayerData.body.pos.y + g_PlayerData.dir.y * PLAYER_BOX_COLLISION_OFFSET_Y;
-
-			move->x = g_PlayerData.dir.x * PLAYER_BOX_COLLISION_OFFSET_X;
-			move->y = g_PlayerData.dir.y * PLAYER_BOX_COLLISION_OFFSET_Y;
-
-			// 弾発射情報を設定
-			const FireBulletData FIRE_DATA =
-			{
-				g_PlayerData.active = true,
-				g_PlayerData.handle = true,
-				PLAYER_NORMAL_SHOT_LIFE,
-				pos->x + g_PlayerData.width / 2,
-				pos->y + g_PlayerData.height / 2 - 10,
-				0,
-				move->x,
-				move->y,
-				0.0f,
-			};
-
-			FireBullet(BULLET_CATEGORY_STRAIGHT, STRAIGHT_BULLET_TYPE_PLAYER_NORMAL, FIRE_DATA, BULLET_COLLISION_TAG_PLAYER);
-
-			// 向いている方向にバレットを発射する
-			VECTOR bulletMove = VecScale(g_PlayerData.dir, PLAYER_NORMAL_SHOT_SPEED);
-
-			// インターバル設定
-			g_PlayerData.bulletIntervalTimer = PLAYER_NORMAL_SHOT_INTERVAL;
-			if (g_PlayerData.GunType == NEW_GUN)
-			{
-				g_PlayerData.bulletIntervalTimer = PLAYER_NEW_SHOT_INTERVAL;
-			}
-		}
+		FireBullet();
 	}
 
+	//X入力
 	if (IsTriggerKey(KEY_X))
 	{
 		if (CheckSquareSquare(g_PlayerData.body.pos.x, g_PlayerData.body.pos.y, g_PlayerData.body.width, g_PlayerData.body.height,
 			GetGun().pos.x, GetGun().pos.y, GetGun().width, GetGun().height))
 		{
-			if (g_PlayerData.GunType == OLD_GUN)
+			GunType work = g_PlayerData.GunType;
+			g_PlayerData.GunType = GetGun().gunType;
+			SetGun(work);
+
+			/*
+			if (g_PlayerData.GunType == REVOLVER)
 			{
-				g_PlayerData.GunType = NEW_GUN;
+				g_PlayerData.GunType = NEWREVOLVER;
 			}
 			else
 			{
-				g_PlayerData.GunType = OLD_GUN;
+				g_PlayerData.GunType = REVOLVER;
 			}
+			*/
+			PlaySE(Wepon_Get);
 		}
 	}
 
@@ -305,7 +265,7 @@ void UpdatePlayer()
 void DrawPlayer()
 {
 	if (!g_PlayerData.active) return;
-	
+
 	//カメラ取得
 	CameraData camera = GetCamera();
 
@@ -316,18 +276,33 @@ void DrawPlayer()
 	vec->y = g_PlayerData.body.pos.y - camera.pos.y;
 
 	DrawAnimation(animData, vec, g_PlayerData.isTurn);
-	
+
 	VECTOR gunPos;
 	if (g_PlayerData.isTurn == false)
 	{
-		gunPos = VGet(73, 48,0);
+		gunPos = VGet(73, 48, 0);
 	}
 	else
 	{
-		gunPos = VGet(7, 48,0);
+		gunPos = VGet(7, 48, 0);
 	}
-	DrawRotaGraph(g_PlayerData.body.pos.x-camera.pos.x+ gunPos.x, g_PlayerData.body.pos.y-camera.pos.y+ gunPos.y,1.0,GetGun().angle, GetGun().handle, true, g_PlayerData.isTurn);
 
+	int handle = 0;
+	if (g_PlayerData.GunType == REVOLVER)
+	{
+		handle = GetGun().revolverhandle;
+	}
+	if (g_PlayerData.GunType == NEWREVOLVER)
+	{
+		handle = GetGun().newrevolverhandle;
+	}
+	DrawRotaGraph(
+		(int)(g_PlayerData.body.pos.x - camera.pos.x + gunPos.x),
+		(int)(g_PlayerData.body.pos.y - camera.pos.y + gunPos.y),
+		1.0, GetGun().angle,
+		handle,
+		true,
+		g_PlayerData.isTurn);
 }
 
 void FinPlayer()
@@ -368,16 +343,6 @@ bool RespawnPlayer()
 	return false;
 }
 
-void PlayerHitNormalBlockX(MapChipData mapChipData)
-{
-
-}
-
-void PlayerHitNormalBlockY(MapChipData mapChipData)
-{
-
-}
-
 void PlayerDead()
 {
 	// 死亡
@@ -385,9 +350,6 @@ void PlayerDead()
 
 	// リスポーン待機開始
 	g_PlayerData.respawnTimer = PLAYER_RESPAWN_WAIT;
-
-	// 死亡SE
-	PlaySE(SE_PLAYER_DEAD);
 }
 
 // 敵と衝突した
@@ -449,4 +411,57 @@ void CalcBoxDollision(PlayerData player, float& x, float& y, float& w, float& h)
 	y = player.body.pos.y + player.boxCollision.pos.y;
 	w = player.boxCollision.width;
 	h = player.boxCollision.height;
+}
+
+void FireBullet()
+{
+	// 弾発射位置はちょっと前から
+	float fireX = g_PlayerData.body.pos.x + PLAYER_NORMAL_SHOT_OFFSET_X;
+	float fireY = g_PlayerData.body.pos.y + PLAYER_NORMAL_SHOT_OFFSET_Y;
+
+	// 現在向いている向きを計算
+	VECTOR PlayerVec = { 0 };
+	g_PlayerData.dir.x = cosf(AngleToRadian(g_PlayerData.angle));
+	g_PlayerData.dir.y = sinf(AngleToRadian(g_PlayerData.angle));
+
+	// 向きのベクトルは常に正規化しておく
+	g_PlayerData.dir = VecNormalize(g_PlayerData.dir);
+
+	// インターバル時間がすぎてから撃つ
+	if (g_PlayerData.bulletIntervalTimer <= 0)
+	{
+		VECTOR* pos = new VECTOR;
+		VECTOR* move = new VECTOR;
+		pos->x = g_PlayerData.body.pos.x + g_PlayerData.dir.x * PLAYER_BOX_COLLISION_OFFSET_X;
+		pos->y = g_PlayerData.body.pos.y + g_PlayerData.dir.y * PLAYER_BOX_COLLISION_OFFSET_Y;
+
+		move->x = g_PlayerData.dir.x * PLAYER_BOX_COLLISION_OFFSET_X;
+		move->y = g_PlayerData.dir.y * PLAYER_BOX_COLLISION_OFFSET_Y;
+
+		// 弾発射情報を設定
+		const FireBulletData FIRE_DATA =
+		{
+			g_PlayerData.active = true,
+			g_PlayerData.handle = true,
+			PLAYER_NORMAL_SHOT_LIFE,
+			pos->x + g_PlayerData.width / 2,
+			pos->y + g_PlayerData.height / 2 - 10,
+			0,
+			move->x,
+			move->y,
+			0.0f,
+		};
+
+		FireBullet(BULLET_CATEGORY_STRAIGHT, STRAIGHT_BULLET_TYPE_PLAYER_NORMAL, FIRE_DATA, BULLET_COLLISION_TAG_PLAYER);
+
+		// 向いている方向にバレットを発射する
+		VECTOR bulletMove = VecScale(g_PlayerData.dir, PLAYER_NORMAL_SHOT_SPEED);
+
+		// インターバル設定
+		g_PlayerData.bulletIntervalTimer = PLAYER_NORMAL_SHOT_INTERVAL;
+		if (g_PlayerData.GunType == NEWREVOLVER)
+		{
+			g_PlayerData.bulletIntervalTimer = PLAYER_NEW_SHOT_INTERVAL;
+		}
+	}
 }

@@ -7,16 +7,13 @@ int g_SEHandle[SE_TYPE_MAX] = { 0 };
 // BGMロード
 void LoadBGM()
 {
-	g_BGMHandle[BGM_TITLE] = LoadSoundMem("Data/Sound/BGM/Title.ogg");
-	g_BGMHandle[BGM_PLAY] = LoadSoundMem("Data/Sound/BGM/Play.ogg");
-	g_BGMHandle[BGM_GAME_OVER] = LoadSoundMem("Data/Sound/BGM/GameOver.ogg");
-	g_BGMHandle[BGM_GAME_CLEAR] = LoadSoundMem("Data/Sound/BGM/GameClear.ogg");
+	g_SEHandle[Wepon_Get] = LoadSoundMem("Data/Sound/SE/WeponGet.ogg");
 }
 
 // BGM再生
 void PlayBGM(BGMType type)
 {
-	//PlaySoundMem(g_BGMHandle[type], DX_PLAYTYPE_LOOP);//
+	PlaySoundMem(g_BGMHandle[type], DX_PLAYTYPE_LOOP);
 }
 
 // BGM停止
@@ -38,16 +35,13 @@ void FinBGM()
 // SEロード
 void LoadSE()
 {
-	g_SEHandle[SE_PLAYRE_SHOT] = LoadSoundMem("Data/Sound/SE/PlayerShot.ogg");
-	g_SEHandle[SE_PLAYRE_SHOT_HIT] = LoadSoundMem("Data/Sound/SE/PlayerShotHit.ogg");
-	g_SEHandle[SE_PLAYER_DEAD] = LoadSoundMem("Data/Sound/SE/PlayerDead.ogg");
-	g_SEHandle[SE_ENEMY_DEAD] = LoadSoundMem("Data/Sound/SE/EnemyDead.ogg");
+	g_SEHandle[Wepon_Get] = LoadSoundMem("Data/Sound/SE/WeponGet.ogg");
 }
 
 // SE再生
 void PlaySE(SEType type)
 {
-	//PlaySoundMem(g_SEHandle[type], DX_PLAYTYPE_BACK);
+	PlaySoundMem(g_SEHandle[type], DX_PLAYTYPE_BACK);
 }
 
 // SE終了

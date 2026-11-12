@@ -27,10 +27,7 @@ void FinBGM();
 
 enum SEType
 {
-	SE_PLAYRE_SHOT,
-	SE_PLAYRE_SHOT_HIT,
-	SE_PLAYER_DEAD,
-	SE_ENEMY_DEAD,
+	Wepon_Get,
 	SE_TYPE_MAX
 };
 

@@ -4,33 +4,42 @@
 #include "../Camera/Camera.h"
 #include "../Player/Player.h"
 #include "../Collision/Collision.h"
+#include <math.h>
 
-//ê›íËä÷òA
-#define NEW_REVOIVER_POS_X	(400.0f)
-#define NEW_REVOIVER_POS_Y	(600.0f)
+#define GUNMAX 100
+#define INVENTORY_MAX 4
 
-#define MACHINE_GUN_POS_X	(600.0f)
-#define MACHINE_GUN_POS_Y	(600.0f)
+GunData g_WorldGun[GUN_MAX];
+
+GunResource g_GunRes;
+
+GunType g_PlayerGun[INVENTORY_MAX];
+
+int g_EquipIndex = 0;
 
 PlayerData g_PlayerPos = { 0 };
 GunData g_GunData = { 0 };
 
 void InitGun()
 {
-	g_GunData.pos.x = NEW_REVOIVER_POS_X;
-	g_GunData.pos.y = NEW_REVOIVER_POS_Y;
-	g_GunData.angle = 0.0f;
-	g_GunData.width = 30.0f;
-	g_GunData.height = 20.0f;
-	g_GunData.gunType = NEWREVOLVER;
+	for (int i = 0; i < GUN_MAX; i++)
+	{
+		g_WorldGun[i].isUse = false;
+	}
+
+	SpawnGun(500, 600,NEWREVOLVER);
+	SpawnGun(400, 600, MACHINE_GUN);
+	SpawnGun(600, 600, SNIPER);
+	SpawnGun(700, 600, SHOT_GUN);
 }
 
 void LoadGun()
 {
-	g_GunData.revolverhandle = LoadGraph("Data/Wepon/Revolver.png");
-	g_GunData.newrevolverhandle = LoadGraph("Data/Wepon/NewRevolver.png");
-	g_GunData.machinegunhandle = LoadGraph("Data/Wepon/machinegun.png");
-	g_GunData.shotgunhandle = LoadGraph("Data/Wepon/shotgun.png");
+	g_GunRes.revolverhandle = LoadGraph("Data/Wepon/Revolver.png");
+	g_GunRes.newrevolverhandle = LoadGraph("Data/Wepon/NewRevolver.png");
+	g_GunRes.machinegunhandle = LoadGraph("Data/Wepon/MachineGun.png");
+	g_GunRes.sniperRiflehandle = LoadGraph("Data/Wepon/SniperRifle.png");
+	g_GunRes.shotgunhandle = LoadGraph("Data/Wepon/ShotGun.png");
 }
 
 void StartGun()
@@ -43,6 +52,7 @@ void StepGun()
 
 void UpdateGun()
 {
+	PickupGun();
 }
 
 void DrawGun()
@@ -50,40 +60,116 @@ void DrawGun()
 	//ÉJÉÅÉâéÊìæ
 	CameraData camera = GetCamera();
 
-	int handle = 0;
-	if (g_GunData.gunType == REVOLVER)
+	for (int i = 0; i < GUN_MAX; i++)
 	{
-		handle = g_GunData.revolverhandle;
-	}
-	if (g_GunData.gunType == NEWREVOLVER)
-	{
-		handle = g_GunData.newrevolverhandle;
-	}
-	if (g_GunData.gunType == MACHINE_GUN)
-	{
-		handle = g_GunData.machinegunhandle;
-	}
+		if (!g_WorldGun[i].isUse)
+		{
+			continue;
+		}
+		int handle = -1;
 
-	DrawRotaGraph((int)(g_GunData.pos.x - camera.pos.x), (int)(g_GunData.pos.y - camera.pos.y), 1.0, g_GunData.angle, handle, TRUE);
-
-	VECTOR* vec = new VECTOR;
+		switch (g_WorldGun[i].gunType)
+		{
+		case REVOLVER:
+			handle = g_GunRes.revolverhandle;
+			break;
+		case NEWREVOLVER:
+			handle = g_GunRes.newrevolverhandle;
+			break;
+		case MACHINE_GUN:
+			handle = g_GunRes.machinegunhandle;
+			break;
+		case SNIPER:
+			handle = g_GunRes.sniperRiflehandle;
+			break;
+		case SHOT_GUN:
+			handle = g_GunRes.shotgunhandle;
+			break;
+		}
+		DrawRotaGraph((int)(g_WorldGun[i].pos.x -camera.pos.x),(int)(g_WorldGun[i].pos.y -camera.pos.y),
+			1.0f,g_WorldGun[i].angle,handle,TRUE);
+	}
 }
 
 void FinGun()
 {
-	DeleteGraph(g_GunData.revolverhandle);
-	DeleteGraph(g_GunData.newrevolverhandle);
-	DeleteGraph(g_GunData.machinegunhandle);
-	DeleteGraph(g_GunData.shotgunhandle);
+	DeleteGraph(g_GunRes.revolverhandle);
+	DeleteGraph(g_GunRes.newrevolverhandle);
+	DeleteGraph(g_GunRes.machinegunhandle);
+	DeleteGraph(g_GunRes.sniperRiflehandle);
+	DeleteGraph(g_GunRes.shotgunhandle);
 
+}
+
+GunType GetEquipGun()
+{
+	return g_PlayerGun[g_EquipIndex];
 }
 
 void SpawnGun(float x, float y, GunType type)
 {
+	for (int i = 0; i < GUN_MAX; i++)
+	{
+		if (!g_WorldGun[i].isUse)
+		{
+			g_WorldGun[i].isUse = true;
+
+			g_WorldGun[i].pos.x = x;
+			g_WorldGun[i].pos.y = y;
+
+			g_WorldGun[i].angle = 0.0f;
+			g_WorldGun[i].gunType = type;
+
+			break;
+		}
+	}
+}
+
+void AddInventory(GunType type)
+{
+	for (int i = 0; i < INVENTORY_MAX; i++)
+	{
+		if (g_PlayerGun[i] == GUN_NONE)
+		{
+			g_PlayerGun[i] = type;
+			return;
+		}
+	}
 }
 
 void PickupGun()
 {
+	PlayerData player = GetPlayer();
+
+	for (int i = 0; i < GUN_MAX; i++)
+	{
+		if (!g_WorldGun[i].isUse)
+		{
+			continue;
+		}
+
+		float dx =
+			player.body.pos.x -
+			g_WorldGun[i].pos.x;
+
+		float dy =
+			player.body.pos.y -
+			g_WorldGun[i].pos.y;
+
+		float dist =
+			sqrtf(dx * dx + dy * dy);
+
+		if (dist < 50.0f)
+		{
+			if (CheckHitKey(KEY_INPUT_E))
+			{
+				AddInventory(
+					g_WorldGun[i].gunType);
+
+				g_WorldGun[i].isUse = false;
+			}
+		}
+	}
 }
 
 GunData GetGun()
@@ -91,7 +177,17 @@ GunData GetGun()
 	return g_GunData;
 }
 
+GunResource GunRes()
+{
+	return g_GunRes;
+}
+
 void SetGun(GunType gunType)
 {
 	g_GunData.gunType = gunType;
+}
+
+void DrawEquipGun(VECTOR playerPos)
+{
+
 }

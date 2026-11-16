@@ -251,6 +251,7 @@ void UpdatePlayer()
 	{
 		g_PlayerData.invisible = false;
 	}
+
 }
 
 void DrawPlayer()
@@ -281,15 +282,15 @@ void DrawPlayer()
 	int handle = 0;
 	if (g_PlayerData.GunType == REVOLVER)
 	{
-		handle = GetGun().revolverhandle;
+		handle = GunRes().revolverhandle;
 	}
 	if (g_PlayerData.GunType == NEWREVOLVER)
 	{
-		handle = GetGun().newrevolverhandle;
+		handle = GunRes().newrevolverhandle;
 	}
 	if (g_PlayerData.GunType == MACHINE_GUN)
 	{
-		handle = GetGun().machinegunhandle;
+		handle = GunRes().machinegunhandle;
 	}
 	DrawRotaGraph(
 		(int)(g_PlayerData.body.pos.x - camera.pos.x + gunPos.x),

@@ -9,25 +9,33 @@ enum GunType
 	MACHINE_GUN,
 	SNIPER,
 	SHOT_GUN,
-	WEPON_NONE = -1
+	GUN_NONE,
+	GUN_MAX
 };
 
 struct GunData
 {
+	bool isUse;
 	VECTOR pos;
 	VECTOR vec;
-	//int handle;	//画像ハンドル
-	int revolverhandle;
-	int newrevolverhandle;
-	int machinegunhandle;
-	int sniperRiflehandle;
-	int shotgunhandle;
 	float angle;
 	bool isTurn;
 	float width;
 	float height;
 	GunType gunType;
 };
+
+struct GunResource
+{
+	int revolverhandle;
+	int newrevolverhandle;
+	int machinegunhandle;
+	int sniperRiflehandle;
+	int shotgunhandle;
+};
+
+void SpawnGun(float x, float y, GunType type);
+void PickupGun();
 
 //各シーンの状態別処理
 void InitGun();
@@ -38,5 +46,8 @@ void UpdateGun();
 void DrawGun();
 void FinGun();
 
+GunType GetEquipGun();
+
 GunData GetGun();
+GunResource GunRes();
 void SetGun(GunType gunType);

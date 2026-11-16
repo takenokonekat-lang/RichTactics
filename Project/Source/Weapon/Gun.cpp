@@ -6,24 +6,23 @@
 #include "../Collision/Collision.h"
 
 //設定関連
-#define GUN_DEFAULT_POS_X	(400.0f)
-#define GUN_DEFAULT_POS_Y	(600.0f)
+#define NEW_REVOIVER_POS_X	(400.0f)
+#define NEW_REVOIVER_POS_Y	(600.0f)
 
-#define PLAYER_DEFAULT_POS_X	(200.0f)
-#define PLAYER_DEFAULT_POS_Y	(250.0f)
+#define MACHINE_GUN_POS_X	(600.0f)
+#define MACHINE_GUN_POS_Y	(600.0f)
 
 PlayerData g_PlayerPos = { 0 };
 GunData g_GunData = { 0 };
 
 void InitGun()
 {
-	g_GunData.pos.x = GUN_DEFAULT_POS_X;
-	g_GunData.pos.y = GUN_DEFAULT_POS_Y;
+	g_GunData.pos.x = NEW_REVOIVER_POS_X;
+	g_GunData.pos.y = NEW_REVOIVER_POS_Y;
 	g_GunData.angle = 0.0f;
 	g_GunData.width = 30.0f;
 	g_GunData.height = 20.0f;
 	g_GunData.gunType = NEWREVOLVER;
-
 }
 
 void LoadGun()
@@ -32,16 +31,6 @@ void LoadGun()
 	g_GunData.newrevolverhandle = LoadGraph("Data/Wepon/NewRevolver.png");
 	g_GunData.machinegunhandle = LoadGraph("Data/Wepon/machinegun.png");
 	g_GunData.shotgunhandle = LoadGraph("Data/Wepon/shotgun.png");
-
-
-
-	/*
-	// リボルバーに切替
-	g_GunData.handle = g_GunData.revolverhandle;
-
-	// ニューリボルバーに切替
-	g_GunData.handle = g_GunData.newrevolverhandle;
-	*/
 }
 
 void StartGun()
@@ -66,9 +55,13 @@ void DrawGun()
 	{
 		handle = g_GunData.revolverhandle;
 	}
-	else if (g_GunData.gunType == NEWREVOLVER)
+	if (g_GunData.gunType == NEWREVOLVER)
 	{
 		handle = g_GunData.newrevolverhandle;
+	}
+	if (g_GunData.gunType == MACHINE_GUN)
+	{
+		handle = g_GunData.machinegunhandle;
 	}
 
 	DrawRotaGraph((int)(g_GunData.pos.x - camera.pos.x), (int)(g_GunData.pos.y - camera.pos.y), 1.0, g_GunData.angle, handle, TRUE);
@@ -83,6 +76,14 @@ void FinGun()
 	DeleteGraph(g_GunData.machinegunhandle);
 	DeleteGraph(g_GunData.shotgunhandle);
 
+}
+
+void SpawnGun(float x, float y, GunType type)
+{
+}
+
+void PickupGun()
+{
 }
 
 GunData GetGun()

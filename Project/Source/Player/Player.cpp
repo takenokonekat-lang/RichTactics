@@ -30,8 +30,8 @@ const PlayerAnimationParam PLAYER_ANIM_PARAM[PLAYER_ANIM_MAX] =
 };
 
 // プレイヤー設定関連
-#define PLAYER_DEFAULT_POS_X		(200.0f)
-#define PLAYER_DEFAULT_POS_Y		(250.0f)
+#define PLAYER_DEFAULT_POS_X		(400.0f)
+#define PLAYER_DEFAULT_POS_Y		(400.0f)
 #define PLAYER_MOVE_SPEED			(7.0f)
 
 #define PLAYER_FOV_RANGE			(200.0f)
@@ -52,7 +52,8 @@ const PlayerAnimationParam PLAYER_ANIM_PARAM[PLAYER_ANIM_MAX] =
 #define PLAYER_NORMAL_SHOT_OFFSET_X	(55.0f)
 #define PLAYER_NORMAL_SHOT_OFFSET_Y	(30.0f)
 #define PLAYER_NORMAL_SHOT_INTERVAL (30)
-#define PLAYER_NEW_SHOT_INTERVAL (15)
+#define PLAYER_NEW_SHOT_INTERVAL	(15)
+#define PLAYER_SHOTGUN_INTERVAL		(20)
 
 
 // プレイヤーの残機
@@ -227,16 +228,6 @@ void StepPlayer()
 			g_PlayerData.GunType = GetGun().gunType;
 			SetGun(work);
 
-			/*
-			if (g_PlayerData.GunType == REVOLVER)
-			{
-				g_PlayerData.GunType = NEWREVOLVER;
-			}
-			else
-			{
-				g_PlayerData.GunType = REVOLVER;
-			}
-			*/
 			PlaySE(Wepon_Get);
 		}
 	}
@@ -295,6 +286,10 @@ void DrawPlayer()
 	if (g_PlayerData.GunType == NEWREVOLVER)
 	{
 		handle = GetGun().newrevolverhandle;
+	}
+	if (g_PlayerData.GunType == MACHINE_GUN)
+	{
+		handle = GetGun().machinegunhandle;
 	}
 	DrawRotaGraph(
 		(int)(g_PlayerData.body.pos.x - camera.pos.x + gunPos.x),
@@ -462,6 +457,10 @@ void FireBullet()
 		if (g_PlayerData.GunType == NEWREVOLVER)
 		{
 			g_PlayerData.bulletIntervalTimer = PLAYER_NEW_SHOT_INTERVAL;
+		}
+		if (g_PlayerData.GunType == MACHINE_GUN)
+		{
+			g_PlayerData.bulletIntervalTimer = PLAYER_SHOTGUN_INTERVAL;
 		}
 	}
 }

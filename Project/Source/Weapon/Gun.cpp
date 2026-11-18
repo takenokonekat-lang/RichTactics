@@ -13,8 +13,6 @@ GunData g_WorldGun[GUN_MAX];
 
 GunResource g_GunRes;
 
-GunType g_PlayerGun[INVENTORY_MAX];
-
 int g_EquipIndex = 0;
 
 PlayerData g_PlayerPos = { 0 };
@@ -101,11 +99,6 @@ void FinGun()
 
 }
 
-GunType GetEquipGun()
-{
-	return g_PlayerGun[g_EquipIndex];
-}
-
 void SpawnGun(float x, float y, GunType type)
 {
 	for (int i = 0; i < GUN_MAX; i++)
@@ -125,19 +118,7 @@ void SpawnGun(float x, float y, GunType type)
 	}
 }
 
-void AddInventory(GunType type)
-{
-	for (int i = 0; i < INVENTORY_MAX; i++)
-	{
-		if (g_PlayerGun[i] == GUN_NONE)
-		{
-			g_PlayerGun[i] = type;
-			return;
-		}
-	}
-}
-
-void PickupGun()
+GunType PickupGun()
 {
 	PlayerData player = GetPlayer();
 
@@ -161,17 +142,14 @@ void PickupGun()
 
 		if (dist < 50.0f)
 		{
-			if (CheckHitKey(KEY_INPUT_E))
-			{
-				AddInventory(
-					g_WorldGun[i].gunType);
-
-				g_WorldGun[i].isUse = false;
-			}
+			g_WorldGun[i].isUse = false;
+			return g_WorldGun[i].gunType;
 		}
 	}
+	return GUN_NONE;
 }
 
+//ŠŽ‚µ‚Ä‚¢‚ée
 GunData GetGun()
 {
 	return g_GunData;

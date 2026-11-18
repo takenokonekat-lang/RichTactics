@@ -10,18 +10,6 @@
 #define PLAYER_HEIGHT	(80.0f)
 #define PLAYER_RADIUS	(40.0f)
 
-//アニメーションタイプ
-enum PlayerAnimationType
-{
-	PLAYER_ANIM_IDLE,
-	PLAYER_ANIM_RUN,
-	PLAYER_ANIM_LANDING,
-	PLAYER_ANIM_MAX,
-	PLAYER_ANIM_NONE=-1
-};
-
-
-
 // プレイヤーデータ
 struct PlayerData
 {
@@ -41,10 +29,11 @@ struct PlayerData
 
 	VECTOR dir;
 
-	GunType GunType;
+	GunType gunType;
+	GunType guns[2];
+	int gunCount;
+	int currentGun;
 
-	AnimationData animation[PLAYER_ANIM_MAX];
-	PlayerAnimationType playAnim;
 	BoxCollision boxCollision;
 };
 

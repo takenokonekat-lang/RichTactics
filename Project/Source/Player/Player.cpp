@@ -15,19 +15,6 @@
 #include <math.h>
 #include "../Weapon/Gun.h"
 
-//アニメーション用パラメータ
-struct PlayerAnimationParam
-{
-	int interval;
-	int frameNum;
-	int width;
-	int height;
-};
-const PlayerAnimationParam PLAYER_ANIM_PARAM[PLAYER_ANIM_MAX] =
-{
-	10, 4, 80, 80,
-	10, 6, 80, 80,
-};
 
 // プレイヤー設定関連
 #define PLAYER_DEFAULT_POS_X		(400.0f)
@@ -71,26 +58,20 @@ const PlayerAnimationParam PLAYER_ANIM_PARAM[PLAYER_ANIM_MAX] =
 PlayerData g_PlayerData = { 0 };
 PlayerData g_PrevPlayerData = { 0 };
 
-void StartPlayerAnimation(PlayerAnimationType anim);
-void UpdataPlayerAnimation();
 void CalcBoxDollision(PlayerData player, float& x, float& y, float& w, float& h);
 
 void InitPlayer()
 {
-	g_PlayerData.body.pos.x = PLAYER_DEFAULT_POS_X;
-	g_PlayerData.body.pos.y = PLAYER_DEFAULT_POS_Y;
+	g_PlayerData.handle = 0;
 	g_PlayerData.body.move.x = 0.0f;
 	g_PlayerData.body.move.y = 0.0f;
-	g_PlayerData.width = 80.0f;
+	g_PlayerData.width = 60.0f;
 	g_PlayerData.height = 80.0f;
 	g_PlayerData.active = false;
-	g_PlayerData.playAnim = PLAYER_ANIM_NONE;
 	g_PlayerData.bulletIntervalTimer;
-
-	for (int i = 0; i < PLAYER_ANIM_MAX; i++)
-	{
-		InitAnimation(&g_PlayerData.animation[i]);
-	}
+	g_PlayerData.guns[0] = REVOLVER;
+	g_PlayerData.gunCount = 1;
+	g_PlayerData.currentGun = 0;
 
 	// 構造体はmemsetで0初期化できる
 	memset(&g_PlayerData.boxCollision, 0, sizeof(g_PlayerData.boxCollision));
@@ -98,14 +79,17 @@ void InitPlayer()
 
 void LoadPlayer()
 {
-	g_PlayerData.animation[PLAYER_ANIM_IDLE].handle = LoadGraph("Data/Player/PlayerIdle.png");
-	g_PlayerData.animation[PLAYER_ANIM_RUN].handle = LoadGraph("Data/Player/PlayerRun.png");
+	g_PlayerData.handle = LoadGraph("Data/Player/Player.png");
 }
 
 void StartPlayer()
 {
 	// 生存フラグを立てる
 	g_PlayerData.active = true;
+
+	//初期位置
+	g_PlayerData.body.pos.x = PLAYER_DEFAULT_POS_X;
+	g_PlayerData.body.pos.y = PLAYER_DEFAULT_POS_Y;
 
 	g_PlayerData.life = PLAYER_DEFAULT_LIFE;
 
@@ -118,9 +102,6 @@ void StartPlayer()
 	g_PlayerData.boxCollision.pos.y = PLAYER_BOX_COLLISION_OFFSET_Y;
 	g_PlayerData.boxCollision.width = PLAYER_BOX_COLLISION_WIDTH;
 	g_PlayerData.boxCollision.height = PLAYER_BOX_COLLISION_HEIGHT;
-
-	// 待機アニメーションから開始する
-	StartPlayerAnimation(PLAYER_ANIM_IDLE);
 }
 
 void StepPlayer()
@@ -221,15 +202,30 @@ void StepPlayer()
 	//X入力
 	if (IsTriggerKey(KEY_X))
 	{
-		if (CheckSquareSquare(g_PlayerData.body.pos.x, g_PlayerData.body.pos.y, g_PlayerData.body.width, g_PlayerData.body.height,
-			GetGun().pos.x, GetGun().pos.y, GetGun().width, GetGun().height))
+		GunType pickupGunType = PickupGun();
+		if (pickupGunType != GUN_NONE)
 		{
-			GunType work = g_PlayerData.GunType;
-			g_PlayerData.GunType = GetGun().gunType;
-			SetGun(work);
+			//拾った処理
+			g_PlayerData.guns[g_PlayerData.gunCount] = pickupGunType;
+			g_PlayerData.gunCount++;
 
-			PlaySE(Wepon_Get);
+			if (g_PlayerData.gunCount >= 2)
+			{
+
+			}
 		}
+		else
+		{
+			//切り替え
+
+		}
+
+		GunType work = g_PlayerData.gunType;
+		g_PlayerData.gunType = GetGun().gunType;
+		SetGun(work);
+
+		PlaySE(Wepon_Get);
+
 	}
 
 	// 無敵中の処理
@@ -251,7 +247,6 @@ void UpdatePlayer()
 	{
 		g_PlayerData.invisible = false;
 	}
-
 }
 
 void DrawPlayer()
@@ -261,34 +256,28 @@ void DrawPlayer()
 	//カメラ取得
 	CameraData camera = GetCamera();
 
-	PlayerAnimationType animeType = g_PlayerData.playAnim;
-	AnimationData* animData = &g_PlayerData.animation[animeType];
-	VECTOR* vec = new VECTOR;
-	vec->x = g_PlayerData.body.pos.x - camera.pos.x;
-	vec->y = g_PlayerData.body.pos.y - camera.pos.y;
-
-	DrawAnimation(animData, vec, g_PlayerData.isTurn);
+	DrawRotaGraph((int)(g_PlayerData.body.pos.x - camera.pos.x), (int)(g_PlayerData.body.pos.y - camera.pos.y), 1.0, g_PlayerData.angle, g_PlayerData.handle, TRUE);
 
 	VECTOR gunPos;
 	if (g_PlayerData.isTurn == false)
 	{
-		gunPos = VGet(73, 48, 0);
+		gunPos = VGet(33, 10, 0);
 	}
 	else
 	{
-		gunPos = VGet(7, 48, 0);
+		gunPos = VGet(-33, 10, 0);
 	}
 
 	int handle = 0;
-	if (g_PlayerData.GunType == REVOLVER)
+	if (g_PlayerData.gunType == REVOLVER)
 	{
 		handle = GunRes().revolverhandle;
 	}
-	if (g_PlayerData.GunType == NEWREVOLVER)
+	if (g_PlayerData.gunType == NEWREVOLVER)
 	{
 		handle = GunRes().newrevolverhandle;
 	}
-	if (g_PlayerData.GunType == MACHINE_GUN)
+	if (g_PlayerData.gunType == MACHINE_GUN)
 	{
 		handle = GunRes().machinegunhandle;
 	}
@@ -303,10 +292,7 @@ void DrawPlayer()
 
 void FinPlayer()
 {
-	for (int i = 0; i < PLAYER_ANIM_MAX; i++)
-	{
-		DeleteGraph(g_PlayerData.animation[i].handle);
-	}
+	DeleteGraph(g_PlayerData.handle);
 }
 
 PlayerData GetPlayer()
@@ -360,42 +346,6 @@ void PlayerHitEnemyBullet()
 {
 	// 衝突したら死亡
 	PlayerDead();
-}
-
-void StartPlayerAnimation(PlayerAnimationType anim)
-{
-	//再生中のアニメーションであれば何もしない
-	if (anim == g_PlayerData.playAnim)return;
-
-	//再生中アニメーション設定
-	g_PlayerData.playAnim = anim;
-
-	//再生中に必要なデータを取得
-	AnimationData* animData = &g_PlayerData.animation[anim];
-	PlayerAnimationParam animParam = PLAYER_ANIM_PARAM[anim];
-
-	// アニメーション再生
-	StartAnimation(animData, g_PlayerData.body.pos, animParam.interval, animParam.frameNum, animParam.width, animParam.height, true);
-}
-
-void UpdataPlayerAnimation()
-{
-	//横に移動していれば走っている
-	if (g_PlayerData.body.move.x < 0.0f || g_PlayerData.body.move.x>0.0f)
-	{
-		//走るアニメーション
-		StartPlayerAnimation(PLAYER_ANIM_RUN);
-	}
-	else
-	{
-		//移動していなければ待機
-		StartPlayerAnimation(PLAYER_ANIM_IDLE);
-	}
-
-	//アニメーション更新
-	PlayerAnimationType animType = g_PlayerData.playAnim;
-	AnimationData* animData = &g_PlayerData.animation[animType];
-	UpdateAnimation(animData);
 }
 
 
@@ -455,11 +405,11 @@ void FireBullet()
 
 		// インターバル設定
 		g_PlayerData.bulletIntervalTimer = PLAYER_NORMAL_SHOT_INTERVAL;
-		if (g_PlayerData.GunType == NEWREVOLVER)
+		if (g_PlayerData.gunType == NEWREVOLVER)
 		{
 			g_PlayerData.bulletIntervalTimer = PLAYER_NEW_SHOT_INTERVAL;
 		}
-		if (g_PlayerData.GunType == MACHINE_GUN)
+		if (g_PlayerData.gunType == MACHINE_GUN)
 		{
 			g_PlayerData.bulletIntervalTimer = PLAYER_SHOTGUN_INTERVAL;
 		}

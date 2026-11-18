@@ -80,9 +80,8 @@ void UpdateAnimation(AnimationData* animData)
 
 void DrawAnimation(AnimationData* animData, bool isTurnX, bool isTurnY)
 {
-	DrawAnimation(animData, &animData->pos,isTurnX,isTurnY);
+	DrawAnimation(animData, &animData->pos);
 }
-
 
 void DrawAnimation(AnimationData* animData, VECTOR* pos, bool isTurnX, bool isTurnY)
 {

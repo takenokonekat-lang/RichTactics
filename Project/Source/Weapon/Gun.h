@@ -35,7 +35,7 @@ struct GunResource
 };
 
 void SpawnGun(float x, float y, GunType type);
-void PickupGun();
+GunType PickupGun();
 
 //ŠeƒV[ƒ“‚Ìó‘Ô•Êˆ—
 void InitGun();
@@ -45,8 +45,6 @@ void StepGun();
 void UpdateGun();
 void DrawGun();
 void FinGun();
-
-GunType GetEquipGun();
 
 GunData GetGun();
 GunResource GunRes();

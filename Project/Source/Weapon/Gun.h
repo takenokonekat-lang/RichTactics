@@ -49,3 +49,5 @@ void FinGun();
 GunData GetGun();
 GunResource GunRes();
 void SetGun(GunType gunType);
+
+void DrawEquipGun(VECTOR playerPos);

@@ -4,6 +4,7 @@
 #include "../Collision/Collision.h"
 #include "../Effect/AnimationEffect.h"
 #include "../Bullet/BulletManager.h"
+#include "../Weapon/Gun.h"
 #include "../Scene/SceneManager.h"
 #include "../Sound/SoundManager.h"
 #include "../Map/MapChip.h"
@@ -92,6 +93,13 @@ void StartPlayer()
 	g_PlayerData.body.pos.y = PLAYER_DEFAULT_POS_Y;
 	g_PlayerData.body.width = PLAYER_WIDTH;
 	g_PlayerData.body.height = PLAYER_HEIGHT;
+
+	g_PlayerData.guns[0] = REVOLVER;
+	g_PlayerData.gunCount = 1;
+	g_PlayerData.currentGun = 0;
+
+	g_PlayerData.gunType = REVOLVER;
+	SetGun(REVOLVER);
 
 	g_PlayerData.life = PLAYER_DEFAULT_LIFE;
 
@@ -201,30 +209,52 @@ void StepPlayer()
 	if (IsTriggerKey(KEY_X))
 	{
 		GunType pickupGunType = PickupGun();
+
+		//•Ší‚ğæ“¾‚Å‚«‚½ê‡
 		if (pickupGunType != GUN_NONE)
 		{
-			//E‚Á‚½ˆ—
-			g_PlayerData.guns[g_PlayerData.gunCount] = pickupGunType;
-			g_PlayerData.gunCount++;
-
-			if (g_PlayerData.gunCount >= 2)
+			//Š”‚ª2ŒÂ–¢–‚Ìê‡
+			if (g_PlayerData.gunCount < 2)
 			{
-
+				g_PlayerData.guns[g_PlayerData.gunCount] = pickupGunType;
+				g_PlayerData.currentGun = g_PlayerData.gunCount;
+				g_PlayerData.gunCount++;
 			}
 		}
+		//Šù‚É“ñŒÂ‚Á‚Ä‚¢‚éê‡
 		else
 		{
-			//Ø‚è‘Ö‚¦
+			//‘•”õ‚µ‚Ä‚¢‚é•Ší‚ğæ“¾
+			GunType dropGun=g_PlayerData.guns[g_PlayerData.currentGun];
 
+			//•Ší‚ğ—‚Æ‚·
+			SpawnGun(g_PlayerData.body.pos.x + g_PlayerData.body.width / 2,
+				g_PlayerData.body.pos.y + g_PlayerData.body.height / 2, dropGun);
+
+			//•Ší‚ÌŒğŠ·
+			g_PlayerData.guns[g_PlayerData.currentGun] = pickupGunType;
 		}
 
-		GunType work = g_PlayerData.gunType;
-		g_PlayerData.gunType = GetGun().gunType;
-		SetGun(work);
+		g_PlayerData.gunType = g_PlayerData.guns[g_PlayerData.currentGun];
+
+		SetGun(g_PlayerData.gunType);
 
 		PlaySE(Wepon_Get);
-
 	}
+
+	//æ“¾‚Å‚«‚È‚©‚Á‚½ê‡‚ÍØ‚è‘Ö‚¦‚é
+	else if (g_PlayerData.gunCount >= 2)
+	{
+		g_PlayerData.currentGun++;
+		if (g_PlayerData.currentGun >= g_PlayerData.gunCount)
+		{
+			g_PlayerData.currentGun = 0;
+		}
+	}
+
+	//‘•”õ‚µ‚Ä‚¢‚é•Ší‚ğXV
+	g_PlayerData.gunType = g_PlayerData.guns[g_PlayerData.currentGun];
+	SetGun(g_PlayerData.gunType);
 
 	// –³“G’†‚Ìˆ—
 	if (g_PlayerData.invisible)
@@ -254,39 +284,18 @@ void DrawPlayer()
 	//ƒJƒƒ‰æ“¾
 	CameraData camera = GetCamera();
 
+	VECTOR playerPos = 
+	{
+		g_PlayerData.body.pos.x + g_PlayerData.body.width / 2,
+		g_PlayerData.body.pos.y + g_PlayerData.body.height / 2,
+		0.0f
+	};
+
+	//Player•`‰æ
 	DrawRotaGraph((int)(g_PlayerData.body.pos.x+g_PlayerData.body.width/2 - camera.pos.x), (int)(g_PlayerData.body.pos.y+g_PlayerData.body.height/2 - camera.pos.y), 
 						1.0,0,g_PlayerData.handle, TRUE,g_PlayerData.isTurn);
 
-	VECTOR gunPos;
-	if (g_PlayerData.isTurn == false)
-	{
-		gunPos = VGet(55, 45, 0);
-	}
-	else
-	{
-		gunPos = VGet(5, 45, 0);
-	}
-
-	int handle = 0;
-	if (g_PlayerData.gunType == REVOLVER)
-	{
-		handle = GunRes().revolverhandle;
-	}
-	if (g_PlayerData.gunType == NEWREVOLVER)
-	{
-		handle = GunRes().newrevolverhandle;
-	}
-	if (g_PlayerData.gunType == MACHINE_GUN)
-	{
-		handle = GunRes().machinegunhandle;
-	}
-	DrawRotaGraph(
-		(int)(g_PlayerData.body.pos.x - camera.pos.x + gunPos.x),
-		(int)(g_PlayerData.body.pos.y - camera.pos.y + gunPos.y),
-		1.0, GetGun().angle,
-		handle,
-		true,
-		g_PlayerData.isTurn);
+	DrawEquipGun(playerPos);
 }
 
 void FinPlayer()

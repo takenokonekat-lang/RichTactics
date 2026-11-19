@@ -4,6 +4,7 @@
 #include "../Camera/Camera.h"
 #include "../Player/Player.h"
 #include "../Collision/Collision.h"
+#include "../Common/Common.h"
 #include <math.h>
 
 #define WORLD_GUN_MAX 100
@@ -20,7 +21,7 @@ GunData g_GunData = { 0 };
 
 void InitGun()
 {
-	for (int i = 0; i < GUN_MAX; i++)
+	for (int i = 0; i < WORLD_GUN_MAX; i++)
 	{
 		g_WorldGun[i].isUse = false;
 	}
@@ -57,7 +58,7 @@ void DrawGun()
 	//カメラ取得
 	CameraData camera = GetCamera();
 
-	for (int i = 0; i < GUN_MAX; i++)
+	for (int i = 0; i < WORLD_GUN_MAX; i++)
 	{
 		if (!g_WorldGun[i].isUse)
 		{
@@ -100,7 +101,7 @@ void FinGun()
 
 void SpawnGun(float x, float y, GunType type)
 {
-	for (int i = 0; i < GUN_MAX; i++)
+	for (int i = 0; i < WORLD_GUN_MAX; i++)
 	{
 		if (!g_WorldGun[i].isUse)
 		{
@@ -121,7 +122,7 @@ GunType PickupGun()
 {
 	PlayerData player = GetPlayer();
 
-	for (int i = 0; i < GUN_MAX; i++)
+	for (int i = 0; i < WORLD_GUN_MAX; i++)
 	{
 		if (!g_WorldGun[i].isUse)
 		{
@@ -166,5 +167,57 @@ void SetGun(GunType gunType)
 
 void DrawEquipGun(VECTOR playerPos)
 {
+	PlayerData player = GetPlayer();
 
+	if (!player.active)return;
+
+	CameraData camera = GetCamera();
+
+	//装備中の武器
+	int handle = -1;
+
+	//装備中の武器に応じた画像
+	switch (player.gunType)
+	{
+	case REVOLVER:
+		handle = g_GunRes.revolverhandle;
+		break;
+	case NEWREVOLVER:
+		handle = g_GunRes.newrevolverhandle;
+		break;
+	case MACHINE_GUN:
+		handle = g_GunRes.machinegunhandle;
+		break;
+	case SNIPER:
+		handle = g_GunRes.sniperRiflehandle;
+		break;
+	case SHOT_GUN:
+		handle = g_GunRes.shotgunhandle;
+		break;
+
+	default:
+		return;
+	}
+
+	if (handle < 0)return;
+
+	VECTOR gunPos;
+
+	if (!player.isTurn)
+	{
+		gunPos = VGet(25, 15, 0);
+	}
+	else
+	{
+		gunPos = VGet(-25, 15, 0);
+	}
+
+	//プレイヤーの向いている方向
+	float angle = AngleToRadian(player.angle);
+
+	//武器の描画
+	DrawRotaGraph(
+		(int)(playerPos.x + gunPos.x - camera.pos.x),
+		(int)(playerPos.y + gunPos.y - camera.pos.y),
+		1.0f,GetGun().angle,handle,TRUE,player.isTurn);
 }

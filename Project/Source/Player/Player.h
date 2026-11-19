@@ -24,13 +24,12 @@ struct PlayerData
 	float angle;
 
 	Body body;
-
 	VECTOR dir;
 
-	GunType gunType;
-	GunType guns[2];
-	int gunCount;
-	int currentGun;
+	GunType gunType;			//e‚Ìí—Ş
+	GunType guns[2];			//‚Ä‚ée‚Ì”
+	int gunCount;				//‚Á‚Ä‚¢‚ée‚Ì”
+	int currentGun;				//‘•”õ‚µ‚Ä‚¢‚é•Ší
 
 	BoxCollision boxCollision;
 };

@@ -7,8 +7,8 @@
 
 // プレイヤーサイズ
 #define PLAYER_WIDTH	(60.0f)
-#define PLAYER_HEIGHT	(80.0f)
-#define PLAYER_RADIUS	(40.0f)
+#define PLAYER_HEIGHT	(60.0f)
+#define PLAYER_RADIUS	(30.0f)
 
 // プレイヤーデータ
 struct PlayerData
@@ -21,8 +21,6 @@ struct PlayerData
 	int respawnTimer;			// リスポーン待機タイマー
 	int invisibleTimer;			// 無敵時間タイマー
 	int life;					// 残機数
-	float width;
-	float height;
 	float angle;
 
 	Body body;
@@ -53,5 +51,3 @@ PlayerData GetPlayer();
 
 // リスポーン処理(リスポーンできなかったらfalseを返す)
 bool RespawnPlayer();
-
-

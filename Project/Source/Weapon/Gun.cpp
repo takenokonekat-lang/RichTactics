@@ -6,10 +6,10 @@
 #include "../Collision/Collision.h"
 #include <math.h>
 
-#define GUNMAX 100
-#define INVENTORY_MAX 4
+#define WORLD_GUN_MAX 100
+#define INVENTORY_MAX 2
 
-GunData g_WorldGun[GUN_MAX];
+GunData g_WorldGun[WORLD_GUN_MAX];
 
 GunResource g_GunRes;
 
@@ -50,7 +50,6 @@ void StepGun()
 
 void UpdateGun()
 {
-	PickupGun();
 }
 
 void DrawGun()

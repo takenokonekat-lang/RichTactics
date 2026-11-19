@@ -4,9 +4,6 @@
 #include "Block.h"
 #include "../Collision/Collision.h"
 
-// キャラクターの周囲何マスまでチェックするか
-#define CHECK_ROUND_NUM (2)
-
 void InitMap()
 {
 }
@@ -68,10 +65,11 @@ void MoveWithMapCollision(Body* body)
 				else if (body->move.x < 0.0f)
 				{
 					// 右に押し出す
-					body->pos.x = block->pos.x + block->width;
+					body->pos.x += (block->pos.x + block->width) - body->pos.x;
 
 				}
 
+				// 移動量は0にする
 				body->move.x = 0.0f;
 			}
 

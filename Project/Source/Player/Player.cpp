@@ -65,8 +65,8 @@ void InitPlayer()
 	g_PlayerData.handle = 0;
 	g_PlayerData.body.move.x = 0.0f;
 	g_PlayerData.body.move.y = 0.0f;
-	g_PlayerData.width = 60.0f;
-	g_PlayerData.height = 80.0f;
+	g_PlayerData.body.width = 60.0f;
+	g_PlayerData.body.height = 60.0f;
 	g_PlayerData.active = false;
 	g_PlayerData.bulletIntervalTimer;
 	g_PlayerData.guns[0] = REVOLVER;
@@ -90,12 +90,10 @@ void StartPlayer()
 	//初期位置
 	g_PlayerData.body.pos.x = PLAYER_DEFAULT_POS_X;
 	g_PlayerData.body.pos.y = PLAYER_DEFAULT_POS_Y;
-
-	g_PlayerData.life = PLAYER_DEFAULT_LIFE;
-
-	// サイズ設定
 	g_PlayerData.body.width = PLAYER_WIDTH;
 	g_PlayerData.body.height = PLAYER_HEIGHT;
+
+	g_PlayerData.life = PLAYER_DEFAULT_LIFE;
 
 	// 矩形判定設定
 	g_PlayerData.boxCollision.pos.x = PLAYER_BOX_COLLISION_OFFSET_X;
@@ -256,16 +254,17 @@ void DrawPlayer()
 	//カメラ取得
 	CameraData camera = GetCamera();
 
-	DrawRotaGraph((int)(g_PlayerData.body.pos.x - camera.pos.x), (int)(g_PlayerData.body.pos.y - camera.pos.y), 1.0, g_PlayerData.angle, g_PlayerData.handle, TRUE);
+	DrawRotaGraph((int)(g_PlayerData.body.pos.x+g_PlayerData.body.width/2 - camera.pos.x), (int)(g_PlayerData.body.pos.y+g_PlayerData.body.height/2 - camera.pos.y), 
+						1.0,0,g_PlayerData.handle, TRUE,g_PlayerData.isTurn);
 
 	VECTOR gunPos;
 	if (g_PlayerData.isTurn == false)
 	{
-		gunPos = VGet(33, 10, 0);
+		gunPos = VGet(55, 45, 0);
 	}
 	else
 	{
-		gunPos = VGet(-33, 10, 0);
+		gunPos = VGet(5, 45, 0);
 	}
 
 	int handle = 0;
@@ -387,11 +386,11 @@ void FireBullet()
 		// 弾発射情報を設定
 		const FireBulletData FIRE_DATA =
 		{
-			g_PlayerData.active = true,
-			g_PlayerData.handle = true,
+			true,
+			0,
 			PLAYER_NORMAL_SHOT_LIFE,
-			pos->x + g_PlayerData.width / 2,
-			pos->y + g_PlayerData.height / 2 - 10,
+			pos->x + g_PlayerData.body.width / 2,
+			pos->y + g_PlayerData.body.height / 2 - 10,
 			0,
 			move->x,
 			move->y,

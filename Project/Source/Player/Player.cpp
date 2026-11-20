@@ -98,7 +98,7 @@ void StartPlayer()
 	g_PlayerData.gunCount = 1;
 	g_PlayerData.currentGun = 0;
 
-	g_PlayerData.gunType = REVOLVER;
+	g_PlayerData.GUNTYPE = REVOLVER;
 	SetGun(REVOLVER);
 
 	g_PlayerData.life = PLAYER_DEFAULT_LIFE;
@@ -213,53 +213,69 @@ void StepPlayer()
 		//武器を取得できた場合
 		if (pickupGunType != GUN_NONE)
 		{
-			//所持数が2個未満の場合
+			// 所持数が2個未満の場合
 			if (g_PlayerData.gunCount < 2)
 			{
+				// 所持枠に追加
 				g_PlayerData.guns[g_PlayerData.gunCount] = pickupGunType;
+
+				// 拾った武器を装備
 				g_PlayerData.currentGun = g_PlayerData.gunCount;
 				g_PlayerData.gunCount++;
 			}
+			// すでに2個持っている場合
+			else
+			{
+				// 現在装備中の武器
+				GunType dropGun =
+					g_PlayerData.guns[g_PlayerData.currentGun];
+
+				// 武器を落とす
+				float dropX =
+					g_PlayerData.body.pos.x +
+					g_PlayerData.body.width / 2 + 80;
+
+				float dropY =
+					g_PlayerData.body.pos.y +
+					g_PlayerData.body.height / 2;
+
+				SpawnGun(dropX, dropY, dropGun);
+
+				// 武器を交換
+				g_PlayerData.guns[g_PlayerData.currentGun] =
+					pickupGunType;
+			}
+
+			// 取得音
+			PlaySE(Wepon_Get);
 		}
-		//既に二個持っている場合
+		// 武器を拾えなかった場合
 		else
 		{
-			//装備している武器を取得
-			GunType dropGun=g_PlayerData.guns[g_PlayerData.currentGun];
+			// 2個以上持っている場合だけ切り替え
+			if (g_PlayerData.gunCount >= 2)
+			{
+				g_PlayerData.currentGun++;
 
-			//武器を落とす
-			SpawnGun(g_PlayerData.body.pos.x + g_PlayerData.body.width / 2,
-				g_PlayerData.body.pos.y + g_PlayerData.body.height / 2, dropGun);
-
-			//武器の交換
-			g_PlayerData.guns[g_PlayerData.currentGun] = pickupGunType;
+				if (g_PlayerData.currentGun >= g_PlayerData.gunCount)
+				{
+					g_PlayerData.currentGun = 0;
+				}
+			}
 		}
 
-		g_PlayerData.gunType = g_PlayerData.guns[g_PlayerData.currentGun];
+		//装備している武器を更新
+		g_PlayerData.GUNTYPE = g_PlayerData.guns[g_PlayerData.currentGun];
 
-		SetGun(g_PlayerData.gunType);
+		SetGun(g_PlayerData.GUNTYPE);
 
-		PlaySE(Wepon_Get);
-	}
 
-	//取得できなかった場合は切り替える
-	else if (g_PlayerData.gunCount >= 2)
-	{
-		g_PlayerData.currentGun++;
-		if (g_PlayerData.currentGun >= g_PlayerData.gunCount)
+
+		// 無敵中の処理
+		if (g_PlayerData.invisible)
 		{
-			g_PlayerData.currentGun = 0;
+			g_PlayerData.invisibleTimer--;
 		}
-	}
-
-	//装備している武器を更新
-	g_PlayerData.gunType = g_PlayerData.guns[g_PlayerData.currentGun];
-	SetGun(g_PlayerData.gunType);
-
-	// 無敵中の処理
-	if (g_PlayerData.invisible)
-	{
-		g_PlayerData.invisibleTimer--;
 	}
 }
 
@@ -413,11 +429,11 @@ void FireBullet()
 
 		// インターバル設定
 		g_PlayerData.bulletIntervalTimer = PLAYER_NORMAL_SHOT_INTERVAL;
-		if (g_PlayerData.gunType == NEWREVOLVER)
+		if (g_PlayerData.GUNTYPE == NEWREVOLVER)
 		{
 			g_PlayerData.bulletIntervalTimer = PLAYER_NEW_SHOT_INTERVAL;
 		}
-		if (g_PlayerData.gunType == MACHINE_GUN)
+		if (g_PlayerData.GUNTYPE == MACHINE_GUN)
 		{
 			g_PlayerData.bulletIntervalTimer = PLAYER_SHOTGUN_INTERVAL;
 		}

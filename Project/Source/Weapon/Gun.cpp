@@ -177,7 +177,7 @@ void DrawEquipGun(VECTOR playerPos)
 	int handle = -1;
 
 	//‘•”õ’†‚Ì•Ší‚É‰‚¶‚½‰æ‘œ
-	switch (player.gunType)
+	switch (player.GUNTYPE)
 	{
 	case REVOLVER:
 		handle = g_GunRes.revolverhandle;
@@ -219,5 +219,5 @@ void DrawEquipGun(VECTOR playerPos)
 	DrawRotaGraph(
 		(int)(playerPos.x + gunPos.x - camera.pos.x),
 		(int)(playerPos.y + gunPos.y - camera.pos.y),
-		1.0f,GetGun().angle,handle,TRUE,player.isTurn);
+		1.0f,angle,handle,TRUE,FALSE);
 }

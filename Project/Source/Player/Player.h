@@ -26,7 +26,7 @@ struct PlayerData
 	Body body;
 	VECTOR dir;
 
-	GunType gunType;			//e‚Ìí—Ş
+	GunType GUNTYPE;			//e‚Ìí—Ş
 	GunType guns[2];			//‚Ä‚ée‚Ì”
 	int gunCount;				//‚Á‚Ä‚¢‚ée‚Ì”
 	int currentGun;				//‘•”õ‚µ‚Ä‚¢‚é•Ší

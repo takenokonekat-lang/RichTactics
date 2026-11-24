@@ -39,9 +39,16 @@
 #define PLAYER_NORMAL_SHOT_LIFE		(600)
 #define PLAYER_NORMAL_SHOT_OFFSET_X	(55.0f)
 #define PLAYER_NORMAL_SHOT_OFFSET_Y	(30.0f)
+
+//各種弾
 #define PLAYER_NORMAL_SHOT_INTERVAL (30)
 #define PLAYER_NEW_SHOT_INTERVAL	(15)
-#define PLAYER_SHOTGUN_INTERVAL		(20)
+#define PLAYER_SHOTGUN_INTERVAL		(25)
+#define PLAYER_SHOTGUN_POWER		(5)
+#define PLAYER_SNIPER_INTERVAL		(50)
+#define PLAYER_SNIPER_POWER			(10)
+#define PLAYER_MACHINEGUN_INTERVAL	(10)
+#define PLAYER_MACHINEGUN_POWER		(3)
 
 
 // プレイヤーの残機
@@ -70,6 +77,7 @@ void InitPlayer()
 	g_PlayerData.body.height = 60.0f;
 	g_PlayerData.active = false;
 	g_PlayerData.bulletIntervalTimer;
+	g_PlayerData.bulletPower;
 	g_PlayerData.guns[0] = REVOLVER;
 	g_PlayerData.gunCount = 1;
 	g_PlayerData.currentGun = 0;
@@ -202,7 +210,7 @@ void StepPlayer()
 	// Z入力
 	if (IsInputKey(KEY_Z))
 	{
-		FireBullet();
+		FireAllBullet();
 	}
 
 	//X入力
@@ -233,7 +241,7 @@ void StepPlayer()
 				// 武器を落とす
 				float dropX =
 					g_PlayerData.body.pos.x +
-					g_PlayerData.body.width / 2 + 80;
+					g_PlayerData.body.width / 2;
 
 				float dropY =
 					g_PlayerData.body.pos.y +
@@ -268,8 +276,6 @@ void StepPlayer()
 		g_PlayerData.GUNTYPE = g_PlayerData.guns[g_PlayerData.currentGun];
 
 		SetGun(g_PlayerData.GUNTYPE);
-
-
 
 		// 無敵中の処理
 		if (g_PlayerData.invisible)
@@ -308,8 +314,9 @@ void DrawPlayer()
 	};
 
 	//Player描画
-	DrawRotaGraph((int)(g_PlayerData.body.pos.x+g_PlayerData.body.width/2 - camera.pos.x), (int)(g_PlayerData.body.pos.y+g_PlayerData.body.height/2 - camera.pos.y), 
-						1.0,0,g_PlayerData.handle, TRUE,g_PlayerData.isTurn);
+	DrawRotaGraph((int)(g_PlayerData.body.pos.x+g_PlayerData.body.width/2 - camera.pos.x),
+				  (int)(g_PlayerData.body.pos.y+g_PlayerData.body.height/2 - camera.pos.y), 
+					1.0,0,g_PlayerData.handle, TRUE,g_PlayerData.isTurn);
 
 	DrawEquipGun(playerPos);
 }
@@ -383,7 +390,7 @@ void CalcBoxDollision(PlayerData player, float& x, float& y, float& w, float& h)
 	h = player.boxCollision.height;
 }
 
-void FireBullet()
+void FireAllBullet()
 {
 	// 弾発射位置はちょっと前から
 	float fireX = g_PlayerData.body.pos.x + PLAYER_NORMAL_SHOT_OFFSET_X;
@@ -415,7 +422,7 @@ void FireBullet()
 			0,
 			PLAYER_NORMAL_SHOT_LIFE,
 			pos->x + g_PlayerData.body.width / 2,
-			pos->y + g_PlayerData.body.height / 2 - 10,
+			pos->y + g_PlayerData.body.height / 2 ,
 			0,
 			move->x,
 			move->y,
@@ -427,15 +434,29 @@ void FireBullet()
 		// 向いている方向にバレットを発射する
 		VECTOR bulletMove = VecScale(g_PlayerData.dir, PLAYER_NORMAL_SHOT_SPEED);
 
-		// インターバル設定
+		// 各種弾設定
 		g_PlayerData.bulletIntervalTimer = PLAYER_NORMAL_SHOT_INTERVAL;
 		if (g_PlayerData.GUNTYPE == NEWREVOLVER)
 		{
 			g_PlayerData.bulletIntervalTimer = PLAYER_NEW_SHOT_INTERVAL;
 		}
+
 		if (g_PlayerData.GUNTYPE == MACHINE_GUN)
 		{
+			g_PlayerData.bulletIntervalTimer = PLAYER_MACHINEGUN_INTERVAL;
+			g_PlayerData.bulletPower = PLAYER_MACHINEGUN_POWER;
+		}
+
+		if (g_PlayerData.GUNTYPE == SNIPER)
+		{
+			g_PlayerData.bulletIntervalTimer = PLAYER_SNIPER_INTERVAL;
+			g_PlayerData.bulletPower = PLAYER_SNIPER_POWER;
+		}
+
+		if (g_PlayerData.GUNTYPE == SHOT_GUN)
+		{
 			g_PlayerData.bulletIntervalTimer = PLAYER_SHOTGUN_INTERVAL;
+			g_PlayerData.bulletPower = PLAYER_SHOTGUN_POWER;
 		}
 	}
 }

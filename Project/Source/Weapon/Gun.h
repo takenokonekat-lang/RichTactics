@@ -2,6 +2,8 @@
 #include "../Collision/Collision.h"
 #include "../Collision/CollisionParameter.h"
 
+#define GUN_PICKUP_RANGE 65.0f
+
 enum GunType
 {
 	REVOLVER,

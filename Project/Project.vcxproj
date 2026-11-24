@@ -142,6 +142,10 @@
     <ClCompile Include="Source\Animation\Animation.cpp" />
     <ClCompile Include="Source\BackGround\BackGround.cpp" />
     <ClCompile Include="Source\Bullet\BulletManager.cpp" />
+    <ClCompile Include="Source\Bullet\machinegun.cpp" />
+    <ClCompile Include="Source\Bullet\NewBullet.cpp" />
+    <ClCompile Include="Source\Bullet\ShotGun.cpp" />
+    <ClCompile Include="Source\Bullet\Sniper.cpp" />
     <ClCompile Include="Source\Bullet\StraightBullet.cpp" />
     <ClCompile Include="Source\Camera\Camera.cpp" />
     <ClCompile Include="Source\Collision\Collision.cpp" />
@@ -171,6 +175,10 @@
     <ClInclude Include="Source\BackGround\BackGround.h" />
     <ClInclude Include="Source\Bullet\BulletManager.h" />
     <ClInclude Include="Source\Bullet\BulletParameter.h" />
+    <ClInclude Include="Source\Bullet\machinegun.h" />
+    <ClInclude Include="Source\Bullet\NewBullet.h" />
+    <ClInclude Include="Source\Bullet\ShotGun.h" />
+    <ClInclude Include="Source\Bullet\Sniper.h" />
     <ClInclude Include="Source\Bullet\StraightBullet.h" />
     <ClInclude Include="Source\Camera\Camera.h" />
     <ClInclude Include="Source\Collision\Collision.h" />

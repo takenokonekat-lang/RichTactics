@@ -64,6 +64,7 @@ void DrawGun()
 		{
 			continue;
 		}
+
 		int handle = -1;
 
 		switch (g_WorldGun[i].gunType)
@@ -84,8 +85,9 @@ void DrawGun()
 			handle = g_GunRes.shotgunhandle;
 			break;
 		}
-		DrawRotaGraph((int)(g_WorldGun[i].pos.x -camera.pos.x),(int)(g_WorldGun[i].pos.y -camera.pos.y),
-			1.0f,g_WorldGun[i].angle,handle,TRUE);
+		DrawRotaGraph
+		((int)(g_WorldGun[i].pos.x -camera.pos.x),
+		 (int)(g_WorldGun[i].pos.y -camera.pos.y),1.0f,g_WorldGun[i].angle,handle,TRUE);
 	}
 }
 
@@ -140,7 +142,7 @@ GunType PickupGun()
 		float dist =
 			sqrtf(dx * dx + dy * dy);
 
-		if (dist < 50.0f)
+		if (dist < GUN_PICKUP_RANGE)
 		{
 			g_WorldGun[i].isUse = false;
 			return g_WorldGun[i].gunType;
@@ -165,13 +167,13 @@ void SetGun(GunType gunType)
 	g_GunData.gunType = gunType;
 }
 
+//¡‘•”õ‚µ‚Ä‚¢‚ée
 void DrawEquipGun(VECTOR playerPos)
 {
 	PlayerData player = GetPlayer();
+	CameraData camera = GetCamera();
 
 	if (!player.active)return;
-
-	CameraData camera = GetCamera();
 
 	//‘•”õ’†‚Ì•Ší
 	int handle = -1;
@@ -219,5 +221,5 @@ void DrawEquipGun(VECTOR playerPos)
 	DrawRotaGraph(
 		(int)(playerPos.x + gunPos.x - camera.pos.x),
 		(int)(playerPos.y + gunPos.y - camera.pos.y),
-		1.0f,angle,handle,TRUE,FALSE);
+		1.0f, 0.0f,handle,TRUE,player.isTurn);
 }

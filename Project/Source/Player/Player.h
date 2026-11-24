@@ -18,6 +18,7 @@ struct PlayerData
 	bool isTurn;				//左を向いてるかどうか
 	int handle;					// 画像ハンドル
 	int bulletIntervalTimer;	// 弾の発射間隔タイマー
+	int bulletPower;
 	int respawnTimer;			// リスポーン待機タイマー
 	int invisibleTimer;			// 無敵時間タイマー
 	int life;					// 残機数
@@ -43,7 +44,7 @@ void UpdatePlayer();
 void DrawPlayer();
 void FinPlayer();
 
-void FireBullet();
+void FireAllBullet();
 
 // 取得関数
 PlayerData GetPlayer();

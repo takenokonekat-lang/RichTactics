@@ -153,6 +153,18 @@
     <ClCompile Include="Source\Weapon\Gun.cpp">
       <Filter>Source\Wepon\Gun</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Bullet\machinegun.cpp">
+      <Filter>Source\Wepon\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Bullet\NewBullet.cpp">
+      <Filter>Source\Wepon\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Bullet\ShotGun.cpp">
+      <Filter>Source\Wepon\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Bullet\Sniper.cpp">
+      <Filter>Source\Wepon\Bullet</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Player\Player.h">
@@ -244,6 +256,18 @@
     </ClInclude>
     <ClInclude Include="Source\Weapon\Gun.h">
       <Filter>Source\Wepon\Gun</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Bullet\machinegun.h">
+      <Filter>Source\Wepon\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Bullet\NewBullet.h">
+      <Filter>Source\Wepon\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Bullet\ShotGun.h">
+      <Filter>Source\Wepon\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Bullet\Sniper.h">
+      <Filter>Source\Wepon\Bullet</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

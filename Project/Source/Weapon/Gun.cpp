@@ -223,3 +223,8 @@ void DrawEquipGun(VECTOR playerPos)
 		(int)(playerPos.y + gunPos.y - camera.pos.y),
 		1.0f, 0.0f,handle,TRUE,player.isTurn);
 }
+
+void BulletSpeed()
+{
+
+}

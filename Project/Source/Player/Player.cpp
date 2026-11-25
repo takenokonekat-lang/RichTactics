@@ -47,6 +47,7 @@
 #define PLAYER_SHOTGUN_POWER		(5)
 #define PLAYER_SNIPER_INTERVAL		(50)
 #define PLAYER_SNIPER_POWER			(10)
+#define PLAYER_SNIPER_SPEED			(70.0f)
 #define PLAYER_MACHINEGUN_INTERVAL	(10)
 #define PLAYER_MACHINEGUN_POWER		(3)
 
@@ -429,34 +430,20 @@ void FireAllBullet()
 			0.0f,
 		};
 
-		FireBullet(BULLET_CATEGORY_STRAIGHT, STRAIGHT_BULLET_TYPE_PLAYER_NORMAL, FIRE_DATA, BULLET_COLLISION_TAG_PLAYER);
+		// 弾の初期設定
+		FireBulletData fireData = {};
+		fireData.active = true;
+		fireData.pos.x = pos->x;
+		fireData.pos.y = pos->y;
 
-		// 向いている方向にバレットを発射する
-		VECTOR bulletMove = VecScale(g_PlayerData.dir, PLAYER_NORMAL_SHOT_SPEED);
+		//
+		StraightBulletType bulletType;
+		float bulletSpeed = PLAYER_NORMAL_SHOT_SPEED;
 
-		// 各種弾設定
-		g_PlayerData.bulletIntervalTimer = PLAYER_NORMAL_SHOT_INTERVAL;
-		if (g_PlayerData.GUNTYPE == NEWREVOLVER)
+		switch (g_PlayerData.GUNTYPE)
 		{
-			g_PlayerData.bulletIntervalTimer = PLAYER_NEW_SHOT_INTERVAL;
-		}
-
-		if (g_PlayerData.GUNTYPE == MACHINE_GUN)
-		{
-			g_PlayerData.bulletIntervalTimer = PLAYER_MACHINEGUN_INTERVAL;
-			g_PlayerData.bulletPower = PLAYER_MACHINEGUN_POWER;
-		}
-
-		if (g_PlayerData.GUNTYPE == SNIPER)
-		{
-			g_PlayerData.bulletIntervalTimer = PLAYER_SNIPER_INTERVAL;
-			g_PlayerData.bulletPower = PLAYER_SNIPER_POWER;
-		}
-
-		if (g_PlayerData.GUNTYPE == SHOT_GUN)
-		{
-			g_PlayerData.bulletIntervalTimer = PLAYER_SHOTGUN_INTERVAL;
-			g_PlayerData.bulletPower = PLAYER_SHOTGUN_POWER;
+		case SNIPER:
+			bulletType = STRAIGHT_BULLET_TYPE_PLAYER_SNIP;
 		}
 	}
 }

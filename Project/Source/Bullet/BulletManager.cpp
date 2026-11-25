@@ -69,5 +69,14 @@ void FireBullet(BulletCategory category, int typeID, FireBulletData fireData, Bu
 		StraightBulletType type = (StraightBulletType)typeID;
 		FireStraightBullet(type, fireData, tag);
 		break;
+	//case BULLET_CATEGORY_MACHINE:
+	//	FireMachineGunBullet(type, fireData, tag);
+	//	break;
+	//case BULLET_CATEGORY_SNIP:
+	//	FireSnaiperBullet(type, fireData, tag);
+	//	break;
+	//case BULLET_CATEGORY_SHOT:
+	//	FireShotGunBullet(type, fireData, tag);
+	//	break;
 	}
 }

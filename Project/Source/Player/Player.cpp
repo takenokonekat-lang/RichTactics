@@ -35,14 +35,14 @@
 #define PLAYER_BOX_COLLISION_HEIGHT		(44)
 
 // íeä÷òA
-#define PLAYER_NORMAL_SHOT_SPEED	(32.0f)
+#define PLAYER_NORMAL_SHOT_SPEED	(20.0f)
 #define PLAYER_NORMAL_SHOT_LIFE		(600)
 #define PLAYER_NORMAL_SHOT_OFFSET_X	(55.0f)
 #define PLAYER_NORMAL_SHOT_OFFSET_Y	(30.0f)
 
 //äeéÌíe
 #define PLAYER_NORMAL_SHOT_INTERVAL (30)
-#define PLAYER_NEW_SHOT_INTERVAL	(15)
+#define PLAYER_NEW_SHOT_INTERVAL	(20)
 #define PLAYER_SHOTGUN_INTERVAL		(25)
 #define PLAYER_SHOTGUN_POWER		(5)
 #define PLAYER_SNIPER_INTERVAL		(50)
@@ -408,42 +408,64 @@ void FireAllBullet()
 	// ÉCÉìÉ^Å[ÉoÉãéûä‘Ç™Ç∑Ç¨ÇƒÇ©ÇÁåÇÇ¬
 	if (g_PlayerData.bulletIntervalTimer <= 0)
 	{
-		VECTOR* pos = new VECTOR;
-		VECTOR* move = new VECTOR;
-		pos->x = g_PlayerData.body.pos.x + g_PlayerData.dir.x * PLAYER_BOX_COLLISION_OFFSET_X;
-		pos->y = g_PlayerData.body.pos.y + g_PlayerData.dir.y * PLAYER_BOX_COLLISION_OFFSET_Y;
-
-		move->x = g_PlayerData.dir.x * PLAYER_BOX_COLLISION_OFFSET_X;
-		move->y = g_PlayerData.dir.y * PLAYER_BOX_COLLISION_OFFSET_Y;
-
-		// íeî≠éÀèÓïÒÇê›íË
-		const FireBulletData FIRE_DATA =
-		{
-			true,
-			0,
-			PLAYER_NORMAL_SHOT_LIFE,
-			pos->x + g_PlayerData.body.width / 2,
-			pos->y + g_PlayerData.body.height / 2 ,
-			0,
-			move->x,
-			move->y,
-			0.0f,
-		};
+		VECTOR pos = { 0 };
+		VECTOR move = { 0 };
+		pos.x = g_PlayerData.body.pos.x + g_PlayerData.body.width / 2 + g_PlayerData.dir.x * PLAYER_BOX_COLLISION_OFFSET_X;
+		pos.y = g_PlayerData.body.pos.y + g_PlayerData.body.width / 2 + g_PlayerData.dir.y * PLAYER_BOX_COLLISION_OFFSET_Y;
 
 		// íeÇÃèâä˙ê›íË
 		FireBulletData fireData = {};
 		fireData.active = true;
-		fireData.pos.x = pos->x;
-		fireData.pos.y = pos->y;
+		fireData.pos = pos;
 
-		//
+		// ïêäÌÇ≤Ç∆ÇÃê›íË
 		StraightBulletType bulletType;
 		float bulletSpeed = PLAYER_NORMAL_SHOT_SPEED;
 
 		switch (g_PlayerData.GUNTYPE)
 		{
 		case SNIPER:
-			bulletType = STRAIGHT_BULLET_TYPE_PLAYER_SNIP;
+			bulletType = STRAIGHT_BULLET_TYPE_PLAYER_NORMAL;
+			fireData.life = PLAYER_NORMAL_SHOT_LIFE;
+			bulletSpeed = PLAYER_NORMAL_SHOT_SPEED+15;
+			g_PlayerData.bulletIntervalTimer = PLAYER_SNIPER_INTERVAL;
+			break;
+
+		case MACHINE_GUN:
+			bulletType = STRAIGHT_BULLET_TYPE_PLAYER_NORMAL;
+			fireData.life = PLAYER_NORMAL_SHOT_LIFE;
+			bulletSpeed = PLAYER_NORMAL_SHOT_SPEED+5;
+			g_PlayerData.bulletIntervalTimer = PLAYER_MACHINEGUN_INTERVAL;
+			break;
+
+		case SHOT_GUN:
+			bulletType = STRAIGHT_BULLET_TYPE_PLAYER_NORMAL;
+			fireData.life = PLAYER_NORMAL_SHOT_LIFE;
+			bulletSpeed = PLAYER_NORMAL_SHOT_SPEED+5;
+			g_PlayerData.bulletIntervalTimer = PLAYER_SHOTGUN_INTERVAL;
+			break;
+
+		case NEWREVOLVER:
+			bulletType = STRAIGHT_BULLET_TYPE_PLAYER_NORMAL;
+			fireData.life = PLAYER_NORMAL_SHOT_LIFE;
+			bulletSpeed = PLAYER_NORMAL_SHOT_SPEED+5;
+			g_PlayerData.bulletIntervalTimer = PLAYER_NEW_SHOT_INTERVAL;
+			break;
+
+		default:
+			bulletType = STRAIGHT_BULLET_TYPE_PLAYER_NORMAL;
+			fireData.life = PLAYER_NORMAL_SHOT_LIFE;
+			bulletSpeed = PLAYER_NORMAL_SHOT_SPEED;
+			g_PlayerData.bulletIntervalTimer = PLAYER_NORMAL_SHOT_INTERVAL;
+			break;
 		}
+
+		// å¸Ç¢ÇƒÇ¢ÇÈï˚å¸Ç∆íeë¨Ç©ÇÁà⁄ìÆó Çê›íË
+		move.x = g_PlayerData.dir.x * bulletSpeed;
+		move.y = g_PlayerData.dir.y * bulletSpeed;
+		fireData.move = move;
+
+		FireBullet(BULLET_CATEGORY_STRAIGHT, bulletType, fireData, BULLET_COLLISION_TAG_PLAYER);
 	}
 }
+

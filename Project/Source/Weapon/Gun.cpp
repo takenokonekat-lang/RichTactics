@@ -221,7 +221,7 @@ void DrawEquipGun(VECTOR playerPos)
 	DrawRotaGraph(
 		(int)(playerPos.x + gunPos.x - camera.pos.x),
 		(int)(playerPos.y + gunPos.y - camera.pos.y),
-		1.0f, 0.0f,handle,TRUE,player.isTurn);
+		1.0f, angle,handle,TRUE,player.isTurn);
 }
 
 void BulletSpeed()

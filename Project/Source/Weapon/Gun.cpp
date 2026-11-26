@@ -7,6 +7,8 @@
 #include "../Common/Common.h"
 #include <math.h>
 
+#define IS_TURN(angle) ((angle) > 90 || (angle) < -90)
+
 #define WORLD_GUN_MAX 100
 #define INVENTORY_MAX 2
 
@@ -214,17 +216,34 @@ void DrawEquipGun(VECTOR playerPos)
 		gunPos = VGet(-25, 15, 0);
 	}
 
-	//ƒvƒŒƒCƒ„[‚ÌŒü‚¢‚Ä‚¢‚é•ûŒü
-	float angle = AngleToRadian(player.angle);
+	// -180`179 ‚É³‹K‰»
+	int angle = (int)player.angle;
+	int a = ((angle + 180) % 360 + 360) % 360 - 180;
+
+	// ¶‰E”½“]”»’è
+	bool turn =
+		(a == 90 || a == -90)
+		? player.isTurn
+		: (a > 90 || a < -90);
+
+	// •`‰æŠp“x‚ð -90`90 ‚ÉÜ‚è•Ô‚·
+	int calcedAngle =
+		a > 90 ? a - 180 :
+		a < -90 ? a + 180 :
+		a;
+
+	// ^ãE^‰º‚Å¶Œü‚«‚Ìê‡
+	if ((a == 90 || a == -90) && turn)
+	{
+		calcedAngle = -calcedAngle;
+	}
+
+	// ƒ‰ƒWƒAƒ“
+	float radian = AngleToRadian((float)calcedAngle);
 
 	//•Ší‚Ì•`‰æ
 	DrawRotaGraph(
 		(int)(playerPos.x + gunPos.x - camera.pos.x),
 		(int)(playerPos.y + gunPos.y - camera.pos.y),
-		1.0f, angle,handle,TRUE,player.isTurn);
-}
-
-void BulletSpeed()
-{
-
+		1.0f, radian, handle, TRUE, turn);
 }
